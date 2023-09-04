@@ -55,7 +55,7 @@
               <span style="color: #c84545" id="message"></span>
             </div>
             <v-text-field id="birthday" ref="birthday" label="تاريخ الميلاد" name="birthday" v-model="birthday"
-              color="#198754" :rules="birthdayRules" :icon="birthIcon" type="date" class="rounded-2" outlined
+              color="#198754" :rules="birthdayRules"  type="date" class="rounded-2" outlined
               required></v-text-field>
               <div class="d-flex" >
             <v-radio-group class="nowrap" id="gender" ref="gender" label=":النوع" name="gender" v-model="gender" row :rules="genderRules">
@@ -232,10 +232,11 @@ export default {
             birth_day: this.birthday,
           },
         })
+        
           .then((res) => {
-            alert("من فضلك يرجى التحقق من بريدك الإلكتروني ");
-
+            console.log("res.data");
             localStorage.setItem("usertoken", res.data.AccessToken);
+            alert("تم التسجيل بنجاح!");
           })
           .catch((err) => {
             if (err.response.status === 400) {
