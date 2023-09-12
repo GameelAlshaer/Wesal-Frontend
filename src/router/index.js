@@ -7,7 +7,7 @@ import friend from '../views/Friend'
 import HomePage from '../views/HomePage'
 import Userinfo from '../views/Userinfo'
 import follower from '../views/LikedMe'
-import Chat from '../views/Chat'
+import Chat from '../views/Chat/Chat.vue'
 import CertifyMe from '../views/CertifyMe'
 import requests from '../views/Request'
 import questions from '../views/Quizzes'
@@ -35,6 +35,7 @@ import AdminLogin from '../views/AdminLogin';
 
 import verifyEmail from '../views/verifyEmail';
 import certifyUsers from '../views/AdminCertify';
+import ChatRoom from "../views/Chat/ChatRoom.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -195,8 +196,12 @@ const routes = [
         name: 'verifyEmail',
         component: verifyEmail,
         props: true
-    }, 
-
+    },
+    {
+        path: '/chatRoom',
+        name: 'chatRoom',
+        component: ChatRoom
+    }
 ]
 
 const router = new VueRouter({

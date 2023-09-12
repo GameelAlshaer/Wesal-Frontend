@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import vuetify from './plugins/vuetify';
 import router from './router';
+import Router from 'vue-router';
 import '@mdi/font/css/materialdesignicons.min.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -37,6 +38,7 @@ window.Echo = new Echo({
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 Vue.use(IconsPlugin);
 Vue.use(BootstrapVue);
+Vue.use(Router);
 Vue.config.productionTip = false;
 
 new Vue({

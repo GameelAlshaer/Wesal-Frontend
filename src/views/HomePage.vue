@@ -4,14 +4,13 @@
       <div >
         <Navbar />
         <Sidebar />
-
-        <v-app v-if="notoken == true">
+        <v-app v-if="notoken === true">
           <ErrorPage style="margin: 50px !important" v-if="notoken" />
         </v-app>
-        <v-app v-if="notverified == true">
+        <v-app v-if="notverified === true">
           <NotVerified style="margin: 50px !important" v-if="notverified" />
         </v-app>
-        <v-app v-if="checkquestions == true">
+        <v-app v-if="checkquestions === true">
           <GoToQuestions style="margin: 50px !important" v-if="checkquestions" />
         </v-app>
         <div v-if="noerror">

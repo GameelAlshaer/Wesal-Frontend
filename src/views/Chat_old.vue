@@ -395,7 +395,6 @@ export default {
           break;
       }
     },
-
     deleteMsg(roomId, message) {
       if (localStorage.getItem("usertoken") === null)
         this.$router.push("Login");
@@ -513,6 +512,8 @@ export default {
           }
         );
         window.Echo.private(`chat.${roomID}`).listen(".MessageSent", (data) => {
+          alert('connect method listened to message sent event') ;
+          alert(data) ;
           this.updateMsgs(data);
         });
         window.Echo.private(`seen.${roomID}`).listen(".MessageSeen", (data) => {
@@ -886,55 +887,63 @@ export default {
       });
     },
     sendMsg(data) {
+      console.log('start sendMsg()');
+      console.log(1) ;
       if (localStorage.getItem("usertoken") === null)
         this.$router.push("Login");
 
       if (!data.replyMessage) {
+        console.log(2) ;
         //no reply msg
         if (!data.files) {
+          console.log(3) ;
           const option = {
             headers: {
               Authorization: `${"Bearer"} ${localStorage.getItem("usertoken")}`,
             },
           };
           axios
-            .post(
-              "http://127.0.0.1:8000/api/sendmsg",
-              { chat_id: data.roomId, content: data.content },
-              option
-            )
-            .catch((error) => {
-              if (error.response.data.message) {
-                if (
-                  error.response.data.message == "no chat found by This id "
-                ) {
-                  alert("لم يتم العثور على هذه المحادثة ");
-                } else if (
-                  error.response.data.message ==
-                  "you dont have access to this chat "
-                ) {
-                  alert("لا يمكنك الدردشة في هذه المحادثة");
-                } else if (
-                  error.response.data.message ==
-                  "you blocked this user, cannot send a message"
-                ) {
-                  alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "this user blocked you, cannot send a message"
-                ) {
-                  alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "can not send more than 4 msgs to this account"
-                ) {
-                  alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
-                } else {
-                  alert(error.response.data.message);
+              .post(
+                  "http://127.0.0.1:8000/api/sendmsg",
+                  {chat_id: data.roomId, content: data.content},
+                  option
+              )
+              .catch((error) => {
+                console.log(12) ;
+                if (error.response.data.message) {
+                  if (
+                      error.response.data.message === "no chat found by This id "
+                  ) {
+                    alert("لم يتم العثور على هذه المحادثة ");
+                  } else if (
+                      error.response.data.message ===
+                      "you dont have access to this chat "
+                  ) {
+                    alert("لا يمكنك الدردشة في هذه المحادثة");
+                  } else if (
+                      error.response.data.message ===
+                      "you blocked this user, cannot send a message"
+                  ) {
+                    alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "this user blocked you, cannot send a message"
+                  ) {
+                    alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "can not send more than 4 msgs to this account"
+                  ) {
+                    alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
+                  } else {
+                    alert('else statement at line 1305');
+                    console.log(error.response.data.message);
+                    alert(error.response.data.message);
+                  }
                 }
-              }
-            });
-        } else {
+              });
+        }
+        else {
           const option = {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -944,56 +953,62 @@ export default {
           const fd = new FormData();
 
           if (data.content != null && data.content.length > 0) {
+            console.log(4) ;
             fd.append(
-              "image",
-              data.files[0].blob,
-              data.files[0].name + "." + data.files[0].extension
+                "image",
+                data.files[0].blob,
+                data.files[0].name + "." + data.files[0].extension
             );
             fd.append("chat_id", data.roomId);
             fd.append("content", data.content);
-          } else {
+          }
+          else {
+            console.log(5) ;
             fd.append(
-              "image",
-              data.files[0].blob,
-              data.files[0].name + "." + data.files[0].extension
+                "image",
+                data.files[0].blob,
+                data.files[0].name + "." + data.files[0].extension
             );
             fd.append("chat_id", data.roomId);
           }
           axios
-            .post("http://127.0.0.1:8000/api/sendpic", fd, option)
-            .catch((error) => {
-              if (error.response.data.message) {
-                if (
-                  error.response.data.message == "no chat found by This id "
-                ) {
-                  alert("لم يتم العثور على هذه المحادثة ");
-                } else if (
-                  error.response.data.message ==
-                  "you dont have access to this chat "
-                ) {
-                  alert("لا يمكنك الدردشة في هذه المحادثة");
-                } else if (
-                  error.response.data.message ==
-                  "you blocked this user, cannot send pic"
-                ) {
-                  alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "this user blocked you, cannot send pic"
-                ) {
-                  alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "can not send more than 4 msgs to this account"
-                ) {
-                  alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
-                } else {
-                  alert(error.response.data.message);
+              .post("http://127.0.0.1:8000/api/sendpic", fd, option)
+              .catch((error) => {
+                console.log(6) ;
+                if (error.response.data.message) {
+                  if (
+                      error.response.data.message === "no chat found by This id "
+                  ) {
+                    alert("لم يتم العثور على هذه المحادثة ");
+                  } else if (
+                      error.response.data.message ===
+                      "you dont have access to this chat "
+                  ) {
+                    alert("لا يمكنك الدردشة في هذه المحادثة");
+                  } else if (
+                      error.response.data.message ===
+                      "you blocked this user, cannot send pic"
+                  ) {
+                    alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "this user blocked you, cannot send pic"
+                  ) {
+                    alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "can not send more than 4 msgs to this account"
+                  ) {
+                    alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
+                  } else {
+                    alert(error.response.data.message);
+                  }
                 }
-              }
-            });
+              });
         }
-      } else {
+      }
+      else {
+        console.log(7) ;
         if (!data.files) {
           const option = {
             headers: {
@@ -1001,47 +1016,50 @@ export default {
             },
           };
           axios
-            .post(
-              "http://127.0.0.1:8000/api/sendmsg",
-              {
-                chat_id: data.roomId,
-                content: data.content,
-                replymsg: data.replyMessage._id,
-              },
-              option
-            )
-            .catch((error) => {
-              if (error.response.data.message) {
-                if (
-                  error.response.data.message == "no chat found by This id "
-                ) {
-                  alert("لم يتم العثور على هذه المحادثة ");
-                } else if (
-                  error.response.data.message ==
-                  "you dont have access to this chat "
-                ) {
-                  alert("لا يمكنك الدردشة في هذه المحادثة");
-                } else if (
-                  error.response.data.message ==
-                  "you blocked this user, cannot send a message"
-                ) {
-                  alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "this user blocked you, cannot send a message"
-                ) {
-                  alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "can not send more than 4 msgs to this account"
-                ) {
-                  alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
-                } else {
-                  alert(error.response.data.message);
+              .post(
+                  "http://127.0.0.1:8000/api/sendmsg",
+                  {
+                    chat_id: data.roomId,
+                    content: data.content,
+                    replymsg: data.replyMessage._id,
+                  },
+                  option
+              )
+              .catch((error) => {
+                console.log(8) ;
+                if (error.response.data.message) {
+                  if (
+                      error.response.data.message === "no chat found by This id "
+                  ) {
+                    alert("لم يتم العثور على هذه المحادثة ");
+                  } else if (
+                      error.response.data.message ===
+                      "you dont have access to this chat "
+                  ) {
+                    alert("لا يمكنك الدردشة في هذه المحادثة");
+                  } else if (
+                      error.response.data.message ===
+                      "you blocked this user, cannot send a message"
+                  ) {
+                    alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "this user blocked you, cannot send a message"
+                  ) {
+                    alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "can not send more than 4 msgs to this account"
+                  ) {
+                    alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
+                  } else {
+                    alert(error.response.data.message);
+                  }
                 }
-              }
-            });
-        } else {
+              });
+        }
+        else {
+          console.log(9) ;
           const option = {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -1051,53 +1069,59 @@ export default {
           const fd = new FormData();
 
           fd.append(
-            "image",
-            data.files[0].blob,
-            data.files[0].name + "." + data.files[0].extension
+              "image",
+              data.files[0].blob,
+              data.files[0].name + "." + data.files[0].extension
           );
           fd.append("chat_id", data.roomId);
           fd.append("replymsg", data.replyMessage._id);
 
           if (data.content != null && data.content.length > 0) {
+            console.log(10) ;
             fd.append("content", data.content);
           }
           axios
-            .post("http://127.0.0.1:8000/api/sendpic", fd, option)
-            .catch((error) => {
-              if (error.response.data.message) {
-                if (
-                  error.response.data.message == "no chat found by This id "
-                ) {
-                  alert("لم يتم العثور على هذه المحادثة ");
-                } else if (
-                  error.response.data.message ==
-                  "you dont have access to this chat "
-                ) {
-                  alert("لا يمكنك الدردشة في هذه المحادثة");
-                } else if (
-                  error.response.data.message ==
-                  "you blocked this user, cannot send pic"
-                ) {
-                  alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "this user blocked you, cannot send pic"
-                ) {
-                  alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
-                } else if (
-                  error.response.data.message ==
-                  "can not send more than 4 msgs to this account"
-                ) {
-                  alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
-                } else {
-                  alert(error.response.data.message);
+              .post("http://127.0.0.1:8000/api/sendpic", fd, option)
+              .catch((error) => {
+                console.log(11) ;
+                if (error.response.data.message) {
+                  if (
+                      error.response.data.message === "no chat found by This id "
+                  ) {
+                    alert("لم يتم العثور على هذه المحادثة ");
+                  } else if (
+                      error.response.data.message ===
+                      "you dont have access to this chat "
+                  ) {
+                    alert("لا يمكنك الدردشة في هذه المحادثة");
+                  } else if (
+                      error.response.data.message ===
+                      "you blocked this user, cannot send pic"
+                  ) {
+                    alert("لقد حظرت هذا المستخدم ، لا يمكنك إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "this user blocked you, cannot send pic"
+                  ) {
+                    alert("لقد حظرك هذا المستخدم ، لا يمكنه إرسال رسالة");
+                  } else if (
+                      error.response.data.message ===
+                      "can not send more than 4 msgs to this account"
+                  ) {
+                    alert("لا يمكن إرسال أكثر من 4 رسائل إلى هذا الحساب");
+                  } else {
+                    alert(error.response.data.message);
+                  }
                 }
-              }
-            });
+              });
         }
       }
+
+      console.log(13) ;
+      console.log('end sendMsg()');
     },
     updateMsgs(data) {
+      alert('update message called') ;
       let time, date;
       time = moment(data.message.created_at).format("HH:mm");
       date = moment(data.message.created_at).format("DD MMMM YYYY");
