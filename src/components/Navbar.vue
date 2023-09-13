@@ -29,7 +29,7 @@
                 <i class="material-icons ms-2" style="font-size: 2.25rem; color: #ffffff;"> home </i>
               </div>
             </b-nav-item>
-            <b-nav-item  @click="redirect('Chat')" class="rounded-2 mx-3">
+            <b-nav-item  @click="redirect('chatStartPage')" class="rounded-2 mx-3">
               <div>
                 <i class="material-icons ms-2" style="font-size: 2.25rem; color: #ffffff;"> chat </i>
               </div>

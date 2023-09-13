@@ -8,7 +8,12 @@
               :key="user.id"
               class="list-group-item list-group-item-action"
           >
-            <router-link to="/chatRoom" style="text-decoration: none;">{{user.name}}</router-link>
+            <router-link
+                style="text-decoration: none;"
+                :to="'/chatRoom/'+user.id"
+            >
+              {{user.name}}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -17,12 +22,43 @@
 
 <script>
 import {RouterLink } from "vue-router";
+import axios from "axios";
 export default {
   components:{
     RouterLink,
   },
-  props: {
-    users: []
+  data() {
+    return {
+      users: [],
+    }
+  },
+  methods: {
+    // check if not logged in ? log in ==> in either cases get the token
+    LoginIfNot() {
+      if (localStorage.getItem("usertoken") === null)
+        this.$router.push("Login");
+      return {
+        headers: {
+          Authorization: `${"Bearer"} ${localStorage.getItem("usertoken")}`,
+        },
+      };
+    },
+
+    async fetchUsers() {
+      const option = this.LoginIfNot();
+      await axios
+          .get('http://127.0.0.1:8000/api/listUsers', option)
+          .then((response) => {
+            this.users = response.data.users;
+          })
+          .catch((error) => {
+            console.log('error in fetching users ( ListUser component )');
+            console.log(error);
+          });
+    },
+  },
+  async created() {
+    await this.fetchUsers();
   }
 }
 </script>

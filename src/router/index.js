@@ -7,7 +7,7 @@ import friend from '../views/Friend'
 import HomePage from '../views/HomePage'
 import Userinfo from '../views/Userinfo'
 import follower from '../views/LikedMe'
-import Chat from '../views/Chat/Chat.vue'
+// import Chat from '../views/Chat/Chat.vue'
 import CertifyMe from '../views/CertifyMe'
 import requests from '../views/Request'
 import questions from '../views/Quizzes'
@@ -36,6 +36,7 @@ import AdminLogin from '../views/AdminLogin';
 import verifyEmail from '../views/verifyEmail';
 import certifyUsers from '../views/AdminCertify';
 import ChatRoom from "../views/Chat/ChatRoom.vue";
+import ChatStartPage from "../views/Chat/ChatStartPage.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -79,11 +80,6 @@ const routes = [
         name: 'Userinfo',
         component: Userinfo,
         props: true
-    },
-    {
-        path: '/chat',
-        name: 'Chat',
-        component: Chat,
     },
     {
         path: '/certifyme',
@@ -198,10 +194,17 @@ const routes = [
         props: true
     },
     {
-        path: '/chatRoom',
+        // we send the id prop ( id of the user we want to talk to )
+        path: '/chatRoom/:otherUserId',
         name: 'chatRoom',
-        component: ChatRoom
-    }
+        component: ChatRoom,
+        props: true
+    },
+    {
+        path: '/chatStartPage',
+        name: 'chatStartPage',
+        component: ChatStartPage,
+    },
 ]
 
 const router = new VueRouter({
