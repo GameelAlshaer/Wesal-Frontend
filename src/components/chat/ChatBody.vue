@@ -1,16 +1,23 @@
 <template>
-  <div class="card">
-    <div class="card-header">{{ otherUser.name }}</div>
+  <div class="card font" >
+    <div class="d-flex justify-content-start align-items-center p-1 " style="background-color: #f6f6f6;">
 
-    <div class="card-body">
+    <div class=" mx-2 my-1" style="width:100px;height: 100px; overflow: hidden ; border-radius: 50%; ">
+      <img :src="otherUser.image" :alt="otherUser.name + ' profile picture'" class="otherUserImage">
+    </div>
+    <div class="fw-bold fs-3 mx-2 my-1 " style="color: #996542!important; ">{{ otherUser.name }}   </div>
+     
+    </div>
+
+    <div class="card-body bbg " style="max-height: 500px; overflow: auto;" >
       <div v-for="message in messages" v-bind:key="message.id">
 
         <div v-if="message.author !== authUser.email" class="d-flex justify-content-end">
-          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #075E54"> {{ message.body }}</div>
+          <div class=" rounded-3  mb-1 py-2 px-2" style="background-color: #ffffff ;color: black; box-shadow: inset;"> {{ message.body }} </div>
         </div>
 
         <div v-else class="d-flex justify-content-start">
-          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #128C7E"> {{ message.body }}</div>
+          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #996542"> {{ message.body }} </div>
         </div>
 
       </div>
@@ -20,12 +27,11 @@
       <input
           type="text"
           v-model="newMessage"
-          class="form-control"
-          placeholder="Type your message..."
+          class="formAm"
+          placeholder="اكتب رسالتك هنا ...."
           @keyup.enter="sendMessage"
       />
     </div>
-
   </div>
 </template>
 
@@ -121,3 +127,36 @@ export default {
   }
 }
 </script>
+<style scoped>
+.bbg{
+  background-image: url(../../assets/chatBg.png) !important;    
+  background-position: center center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+    z-index: 100000;
+
+}
+.otherUserImage{
+  width: 150%;
+  height: auto; /* Maintains the aspect ratio of the image */
+}
+.font{
+  font-family: 'Changa', sans-serif;
+}
+.formAm{
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.25rem;
+
+}
+</style>

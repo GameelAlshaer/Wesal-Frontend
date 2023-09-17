@@ -1,11 +1,16 @@
 <template>
+  <v-app>
+    <v-main >
+      <div >
+        <Navbar />
+        <Sidebar />
   <div class="container">
   <div class="row">
     <div class="col-md-3">
       <list-users></list-users>
     </div>
     <div class="col-md-9">
-      <div v-if="authUser!==undefined && otherUser!==undefined">
+      <div v-if="authUser!=={} && otherUser!=={}">
         <chat-body :auth-user="authUser" :other-user="otherUser"></chat-body>
       </div>
       <div v-else>
@@ -14,17 +19,25 @@
     </div>
   </div>
   </div>
+      </div>
+    </v-main>
+  </v-app>
+
 </template>
 
 <script>
 import ListUsers from "../../components/chat/ListUsers.vue";
 import ChatBody from "../../components/chat/ChatBody.vue";
+import Navbar from "../../components/Navbar.vue";
+import Sidebar from "../../components/Sidebar.vue";
 import axios from "axios";
 
 export default {
   components:{
     ListUsers,
-    ChatBody
+    ChatBody,
+    Navbar,
+    Sidebar,
   },
   props: {
     otherUserId: {
@@ -69,3 +82,16 @@ export default {
 
 }
 </script>
+<style scoped>
+.bg {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  z-index: 2;
+}
+.v-main {
+  background-image: url(../../assets/bb.jpg);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+</style>

@@ -1,23 +1,19 @@
 <template>
-    <div class="card">
-      <div class="card-header">Users</div>
-      <div class="card-body">
-        <p v-if="!users.length">No Users</p>
-        <ul v-else class="list-group list-group-flush">
-          <li v-for="user in users"
-              :key="user.id"
-              class="list-group-item list-group-item-action"
-          >
-            <router-link
-                style="text-decoration: none;"
-                :to="'/chatRoom/'+user.id"
-            >
-              {{user.name}}
-            </router-link>
-          </li>
-        </ul>
-      </div>
+  <div class="card font">
+    <div class="card-header fw-bolder fs-3">الدردشات</div>
+    <div class="card-body" style="max-height: 650px; overflow: auto;">
+      <p v-if="!users.length">لا يوجد أي دردشات </p>
+      <ul v-else class="list-group list-group-flush">
+        <li v-for="user in users" :key="user.id" class="list-group-item list-group-item-action">
+          <router-link style="text-decoration: none; color:#996542; font-weight: bolder; font-size: 1.25rem;"
+            :to="'/chatRoom/' + user.id">
+                <p>{{ user.name }}</p>
+
+          </router-link>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script>
@@ -64,5 +60,7 @@ export default {
 </script>
 
 <style scoped>
-
+.font {
+  font-family: 'Changa', sans-serif;
+}
 </style>
