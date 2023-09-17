@@ -4,10 +4,11 @@
     <div class="card-body" style="max-height: 650px; overflow: auto;">
       <p v-if="!users.length">لا يوجد أي دردشات </p>
       <ul v-else class="list-group list-group-flush">
-        <li v-for="user in users" :key="user.id" class="list-group-item list-group-item-action">
+<!--        <li v-for="user in users" :key="user.id" class="list-group-item list-group-item-action">-->
+        <li  v-for="user in users" :key="user.user[0].id" class="list-group-item list-group-item-action">
           <router-link style="text-decoration: none; color:#996542; font-weight: bolder; font-size: 1.25rem;"
-            :to="'/chatRoom/' + user.id">
-                <p>{{ user.name }}</p>
+            :to="'/chatRoom/' + user.user[0].id">
+                <p>{{ user.user[0].name }}</p>
           </router-link>
         </li>
       </ul>
@@ -41,15 +42,10 @@ export default {
 
     async fetchUsers() {
       const option = this.loginAndGetToken();
-      await axios
-          .get('http://127.0.0.1:8000/api/listUsers',option)
-          .then((response) => {
-            this.users = response.data.users;
-          })
-          .catch((error) => {
-            console.log('error in fetching users ( ListUser component )');
-            console.log(error);
-          });
+      // this request returns a collection of users where each record looks like => user[] that contains only one user
+        // that's why we access through user.user[0]
+      let response = await axios.get('http://127.0.0.1:8000/api/preference',option);
+      this.users = response.data ;
     },
   },
   async created() {
