@@ -7,7 +7,7 @@ import friend from '../views/Friend'
 import HomePage from '../views/HomePage'
 import Userinfo from '../views/Userinfo'
 import follower from '../views/LikedMe'
-import Chat from '../views/Chat'
+// import Chat from '../views/Chat/Chat.vue'
 import CertifyMe from '../views/CertifyMe'
 import requests from '../views/Request'
 import questions from '../views/Quizzes'
@@ -18,9 +18,7 @@ import Register from '../views/Register';
 import ForgotPassword from '../views/ForgotPassword';
 import UserProfile from '../components/Profile';
 import AdminHomePage from '../views/AdminHomePage';
-
 import AdminNavbar from '../components/AdminNavbar';
-
 import AdminRegisteration from '../views/AdminRegisteration';
 import All_Reports from '../views/AdminReports';
 
@@ -35,9 +33,18 @@ import AdminLogin from '../views/AdminLogin';
 
 import verifyEmail from '../views/verifyEmail';
 import certifyUsers from '../views/AdminCertify';
+import ChatRoom from "../views/Chat/ChatRoom.vue";
+import ChatStartPage from "../views/Chat/ChatStartPage.vue";
+import LoadingView from "../views/Chat/LoadingView.vue";
 Vue.use(VueRouter)
 
 const routes = [
+    {
+        path: '/',
+        redirect: {path: '/homepage'},
+        name: 'HomePage',
+        component: HomePage
+    },
     {
         path: '/about',
         name: 'About',
@@ -78,11 +85,6 @@ const routes = [
         name: 'Userinfo',
         component: Userinfo,
         props: true
-    },
-    {
-        path: '/chat',
-        name: 'Chat',
-        component: Chat,
     },
     {
         path: '/certifyme',
@@ -195,8 +197,24 @@ const routes = [
         name: 'verifyEmail',
         component: verifyEmail,
         props: true
-    }, 
-
+    },
+    {
+        // we send the id prop ( id of the user we want to talk to )
+        path: '/chatRoom/:otherUserId',
+        name: 'chatRoom',
+        component: ChatRoom,
+        props: true
+    },
+    {
+        path: '/chatStartPage',
+        name: 'chatStartPage',
+        component: ChatStartPage,
+    },
+    {
+        path: '/loadingView',
+        name: 'LoadingView',
+        component: LoadingView
+    },
 ]
 
 const router = new VueRouter({

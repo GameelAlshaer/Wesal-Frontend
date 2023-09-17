@@ -4,14 +4,13 @@
       <div >
         <Navbar />
         <Sidebar />
-
-        <v-app v-if="notoken == true">
+        <v-app v-if="notoken === true">
           <ErrorPage style="margin: 50px !important" v-if="notoken" />
         </v-app>
-        <v-app v-if="notverified == true">
+        <v-app v-if="notverified === true">
           <NotVerified style="margin: 50px !important" v-if="notverified" />
         </v-app>
-        <v-app v-if="checkquestions == true">
+        <v-app v-if="checkquestions === true">
           <GoToQuestions style="margin: 50px !important" v-if="checkquestions" />
         </v-app>
         <div v-if="noerror">
@@ -74,7 +73,8 @@ export default {
   mounted() {
     if (!localStorage.getItem("usertoken")) {
       this.notoken = true;
-      return;
+      // return;
+      this.$router.push("Login");
     }
     const token = "Bearer ".concat(localStorage.getItem("usertoken"));
     /// const token ='Bearer '.concat("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzMjUyNjY3MSwiZXhwIjoxNjMyOTM3MDcyLCJuYmYiOjE2MzI1MjY2NzIsImp0aSI6ImdhVVJYa0hLT0ZTMnZncTQiLCJzdWIiOjExLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.nsz9eFgELtk7uU-IKF_X8RIxkXusIrcjF22bWuhq7l4");///
