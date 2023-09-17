@@ -10,7 +10,7 @@
       <list-users></list-users>
     </div>
     <div class="col-md-9">
-      <div v-if="authUser!=={} && otherUser!=={}">
+      <div v-if="authUser!==undefined && otherUser!==undefined">
         <chat-body :auth-user="authUser" :other-user="otherUser"></chat-body>
       </div>
       <div v-else>

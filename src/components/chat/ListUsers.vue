@@ -8,7 +8,6 @@
           <router-link style="text-decoration: none; color:#996542; font-weight: bolder; font-size: 1.25rem;"
             :to="'/chatRoom/' + user.id">
                 <p>{{ user.name }}</p>
-
           </router-link>
         </li>
       </ul>
