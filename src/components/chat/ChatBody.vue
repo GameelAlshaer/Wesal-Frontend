@@ -2,15 +2,15 @@
   <div class="card">
     <div class="card-header">{{ otherUser.name }}</div>
 
-    <div class="card-body" >
+    <div class="card-body">
       <div v-for="message in messages" v-bind:key="message.id">
 
         <div v-if="message.author !== authUser.email" class="d-flex justify-content-end">
-          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #075E54"> {{ message.body }} </div>
+          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #075E54"> {{ message.body }}</div>
         </div>
 
         <div v-else class="d-flex justify-content-start">
-          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #128C7E"> {{ message.body }} </div>
+          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #128C7E"> {{ message.body }}</div>
         </div>
 
       </div>
@@ -25,6 +25,7 @@
           @keyup.enter="sendMessage"
       />
     </div>
+
   </div>
 </template>
 
@@ -46,8 +47,8 @@ export default {
       required: true
     }
   },
-  data(){
-    return{
+  data() {
+    return {
       messages: [],
       newMessage: "",
       channel: "",
@@ -56,64 +57,64 @@ export default {
   },
   async created() {
     const token = await this.fetchToken();
-    console.log(token) ;
     await this.initializeClient(token);
     await this.fetchMessages();
-
+  },
+  updated(){
+    console.log('component updated');
   },
   methods: {
-    async fetchToken() {
-      const {data} = await axios.post("http://127.0.0.1:8000/api/token", {
-        email: this.authUser.email
-      });
-      return data.token;
+    loginAndGetToken() {
+      if (localStorage.getItem("usertoken") === null)
+        this.$router.push("Login");
+      return {
+        headers: {
+          Authorization: `${"Bearer"} ${localStorage.getItem("usertoken")}`,
+        },
+      };
     },
+    async fetchToken() {
+      const option = this.loginAndGetToken();
+      const params = {
+        email: `${this.authUser.email}`,
+      }
+      const {data} = await axios.post("http://127.0.0.1:8000/api/token", params, option);
+      return data.token;
+
+      // const data = await axios.post("http://127.0.0.1:8000/api/test",params, option);
+      // return data ;
+    },
+
     async initializeClient(token) {
-      console.log('init client');
-      // const client = await Twilio.Chat.Client.create(token);
-      const client = await Chat.Client.create(token);
+      const client = await new Chat.Client(token);
+
+      let mx = max(this.authUser.id, this.otherUser.id);
+      let mn = min(this.authUser.id, this.otherUser.id);
+
+      this.channel = await client.getChannelByUniqueName(
+          `${mn}-${mx}`
+      );
+
+      console.log(this.channel);
 
       client.on("tokenAboutToExpire", async () => {
         const token = await this.fetchToken();
         client.updateToken(token);
       });
 
-      let mx = max(this.authUser.id , this.otherUser.id);
-      let mn = min(this.authUser.id , this.otherUser.id);
-
-      console.log('before getting the channel');
-
-      this.channel = await client.getChannelByUniqueName(
-          `${mn}-${mx}`
-      );
-
-      console.log('After getting the channel');
-      console.log(this.channel) ;
-
       this.channel.on("messageAdded", message => {
-        console.log('message added') ;
+        console.log('message added');
         this.messages.push(message);
       });
 
-      this.channel.on('typingStarted', member => {
-        console.log('typingStarted');
-        this.typingPlaceHolder.text(member.identity + ' is typing...');
-        console.log(this.typingPlaceHolder);
-      });
-      this.channel.on('typingEnded', data => {
-        console.log('typingEnded');
-        console.log(data) ;
-        this.typingPlaceHolder.text('');
-        console.log(this.typingPlaceHolder);
-      });
     },
     async fetchMessages() {
-      console.log('fetch messages') ;
+      console.log('fetch messages');
       this.messages = (await this.channel.getMessages()).items;
     },
     sendMessage() {
-      console.log('send message %s' , this.newMessage) ;
-      console.log(this.channel) ;
+      console.log('send message %s', this.newMessage);
+      console.log(this.channel);
       this.channel.sendMessage(this.newMessage);
       this.newMessage = "";
     },

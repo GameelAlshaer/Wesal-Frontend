@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     // check if not logged in ? log in ==> in either cases get the token
-    LoginIfNot() {
+    loginAndGetToken() {
       if (localStorage.getItem("usertoken") === null)
         this.$router.push("Login");
       return {
@@ -45,9 +45,9 @@ export default {
     },
 
     async fetchUsers() {
-      const option = this.LoginIfNot();
+      const option = this.loginAndGetToken();
       await axios
-          .get('http://127.0.0.1:8000/api/listUsers', option)
+          .get('http://127.0.0.1:8000/api/listUsers',option)
           .then((response) => {
             this.users = response.data.users;
           })

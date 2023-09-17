@@ -18,9 +18,7 @@ import Register from '../views/Register';
 import ForgotPassword from '../views/ForgotPassword';
 import UserProfile from '../components/Profile';
 import AdminHomePage from '../views/AdminHomePage';
-
 import AdminNavbar from '../components/AdminNavbar';
-
 import AdminRegisteration from '../views/AdminRegisteration';
 import All_Reports from '../views/AdminReports';
 
@@ -37,9 +35,16 @@ import verifyEmail from '../views/verifyEmail';
 import certifyUsers from '../views/AdminCertify';
 import ChatRoom from "../views/Chat/ChatRoom.vue";
 import ChatStartPage from "../views/Chat/ChatStartPage.vue";
+import LoadingView from "../views/Chat/LoadingView.vue";
 Vue.use(VueRouter)
 
 const routes = [
+    {
+        path: '/',
+        redirect: {path: '/homepage'},
+        name: 'HomePage',
+        component: HomePage
+    },
     {
         path: '/about',
         name: 'About',
@@ -204,6 +209,11 @@ const routes = [
         path: '/chatStartPage',
         name: 'chatStartPage',
         component: ChatStartPage,
+    },
+    {
+        path: '/loadingView',
+        name: 'LoadingView',
+        component: LoadingView
     },
 ]
 

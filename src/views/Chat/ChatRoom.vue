@@ -5,7 +5,7 @@
       <list-users></list-users>
     </div>
     <div class="col-md-9">
-      <div v-if="authUser!=={} && otherUser!=={}">
+      <div v-if="authUser!==undefined && otherUser!==undefined">
         <chat-body :auth-user="authUser" :other-user="otherUser"></chat-body>
       </div>
       <div v-else>
@@ -32,12 +32,14 @@ export default {
       required: true
     },
   },
-
   data(){
     return{
-      authUser: {},
-      otherUser: {},
+      authUser: undefined,
+      otherUser: undefined,
     };
+  },
+  async created() {
+    await this.get2Users(this.otherUserId);
   },
   methods:{
     // check if not logged in ? log in ==> in either cases get the token
@@ -56,7 +58,6 @@ export default {
       await axios
           .get(`http://127.0.0.1:8000/api/messages/${id}` , option)
           .then(response => {
-            console.log(response.data);
             this.authUser = response.data.authUser ;
             this.otherUser = response.data.otherUser ;
           })
@@ -64,16 +65,7 @@ export default {
             console.log(error) ;
           });
     },
+  },
 
-    async loadChatBody(id){
-        await this.get2Users(id);
-        // console.log(this.authUser) ;
-        // console.log(this.otherUser);
-    }
-  },
-  async created() {
-    console.log(this.otherUserId) ;
-    await this.loadChatBody(this.otherUserId);
-  },
 }
 </script>
