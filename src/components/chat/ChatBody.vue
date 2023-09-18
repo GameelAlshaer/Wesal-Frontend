@@ -5,22 +5,22 @@
     <div class=" mx-2 my-1" style="width:100px;height: 100px; overflow: hidden ; border-radius: 50%; ">
       <img :src="otherUser.image" :alt="otherUser.name + ' profile picture'" class="otherUserImage">
     </div>
-    <div class="fw-bold fs-3 mx-2 my-1 " style="color: #996542!important; ">{{ otherUser.name }}   </div>
-     
+    <div class="fw-bold fs-3 mx-2 my-1 " style="color: #996542!important; "> {{ otherUser.name }} </div>
     </div>
 
-    <div class="card-body bbg " style="max-height: 500px; overflow: auto;" >
+    <div v-if="messages.length" class="card-body bbg " style="max-height: 500px; overflow: auto;" >
       <div v-for="message in messages" v-bind:key="message.id">
-
         <div v-if="message.author !== authUser.email" class="d-flex justify-content-end">
           <div class=" rounded-3  mb-1 py-2 px-2" style="background-color: #ffffff ;color: black; box-shadow: inset;"> {{ message.body }} </div>
         </div>
-
         <div v-else class="d-flex justify-content-start">
           <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #996542"> {{ message.body }} </div>
         </div>
-
       </div>
+    </div>
+
+    <div v-else class="card-body bbg " style="max-height: 500px; overflow: auto;">
+      <h3>{{ initialMessage }}</h3>
     </div>
 
     <div class="card-footer">
@@ -38,6 +38,7 @@
 <script>
 // install twilio js sdk before using it
 const Chat = require('twilio-chat');
+// needed to name the channel correctly
 import {max, min} from "@popperjs/core/lib/utils/math";
 import axios from "axios";
 
@@ -53,12 +54,29 @@ export default {
       required: true
     }
   },
+  // computed: {
+  //     computedProp(){
+  //       return this.otherUser.name ;
+  //     },
+  // },
+  // watch:{
+  //   otherUser: {
+  //     immediate:true,
+  //     handler (newValue , oldValue) {
+  //       console.log('new value of other user has been detected:',newValue);
+  //       console.log(this.otherUser);
+  //       console.log(oldValue);
+  //       console.log(newValue) ;
+  //     },
+  //   }
+  // },
   data() {
     return {
       messages: [],
       newMessage: "",
       channel: "",
-      typingPlaceHolder: ""
+      initialMessage:"جاري التحميل",
+      typingPlaceHolder: "",
     };
   },
   async created() {
@@ -68,6 +86,7 @@ export default {
   },
   updated(){
     console.log('component updated');
+    console.log(this.otherUser);
   },
   methods: {
     loginAndGetToken() {
@@ -79,6 +98,7 @@ export default {
         },
       };
     },
+
     async fetchToken() {
       const option = this.loginAndGetToken();
       const params = {
@@ -114,13 +134,16 @@ export default {
       });
 
     },
+
     async fetchMessages() {
       console.log('fetch messages');
       this.messages = (await this.channel.getMessages()).items;
+      if(this.messages.length===0)
+        this.initialMessage = "لم تبدأ المحادثة حتي الان..." ;
     },
+
     sendMessage() {
       console.log('send message %s', this.newMessage);
-      console.log(this.channel);
       this.channel.sendMessage(this.newMessage);
       this.newMessage = "";
     },
