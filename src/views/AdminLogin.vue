@@ -64,11 +64,19 @@ export default {
     error: null,
     success: false,
   }),
+  mounted() {
+    this.AdminHomePage();
+  },
   methods: {
     validate() {
       this.$refs.form.validate();
     },
+    AdminHomePage(){
+      if(localStorage.getItem('adminToken') != null){
+        this.$router.push({ name: "AdminHomePage" });
+      }
 
+    },
     Login() {
       //const AuthStr = 'Bearer '.concat(localStorage.getItem('usertoken'));
       if (this.$refs.form.validate()) {

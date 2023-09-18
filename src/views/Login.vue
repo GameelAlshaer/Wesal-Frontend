@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+    <v-app>
     <v-main class="font" >   
       <navbar1 />
       <v-container>
@@ -59,6 +59,7 @@
       <Footer />
     </v-main>
   </v-app>
+
 </template>
 
 <script>
@@ -70,6 +71,9 @@ export default {
   components: {
     navbar1,
     Footer,
+  },
+  mounted() {
+    this.HomePage();
   },
   data: () => ({
     show1: false,
@@ -92,10 +96,18 @@ export default {
     error: null,
     success: false,
   }),
+  
   methods: {
     validate() {
       this.$refs.form.validate();
     },
+    HomePage(){
+      if(localStorage.getItem('usertoken') != null){
+        this.$router.push({ name: "HomePage" });
+      }
+
+    },
+
 
     forgotPassword() {
       this.$router.push({ name: "ForgotPassword" });
