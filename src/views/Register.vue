@@ -132,6 +132,9 @@ export default {
     errrConfirm: "",
     errorBirthday: "",
   }),
+  mounted() {
+    this.HomePage();
+  },
   methods: {
     signUpFacebook() {
       if (this.$refs.myform.validate()) {
@@ -165,7 +168,13 @@ export default {
           });
       }
     },
+    HomePage(){
+      if(localStorage.getItem('usertoken') != null){
+        this.$router.push({ name: "HomePage" });
+      }
 
+    },
+    
     signUpGoogle() {
       if (this.$refs.myform.validate()) {
         axios({

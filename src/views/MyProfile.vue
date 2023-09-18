@@ -387,7 +387,7 @@ export default {
       });
     },
     saveChanges() {
-      if (localStorage.getItem("usertoken") === null) this.$router.push("/");
+      if (localStorage.getItem("usertoken") === null) this.$router.push("login");
       const option = {
         headers: {
           Authorization: `${"Bearer"} ${localStorage.getItem("usertoken")}`,
@@ -419,6 +419,8 @@ export default {
             .catch((e) => {
               console.log(e);
             });
+            window.location.reload();
+
       }
     },
   },
