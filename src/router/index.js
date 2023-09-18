@@ -35,7 +35,6 @@ import verifyEmail from '../views/verifyEmail';
 import certifyUsers from '../views/AdminCertify';
 import ChatRoom from "../views/Chat/ChatRoom.vue";
 import ChatStartPage from "../views/Chat/ChatStartPage.vue";
-import LoadingView from "../views/Chat/LoadingView.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -209,11 +208,6 @@ const routes = [
         path: '/chatStartPage',
         name: 'chatStartPage',
         component: ChatStartPage,
-    },
-    {
-        path: '/loadingView',
-        name: 'LoadingView',
-        component: LoadingView
     },
 ]
 

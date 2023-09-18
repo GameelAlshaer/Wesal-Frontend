@@ -1,21 +1,35 @@
 <template>
   <div class="card font" >
     <div class="d-flex justify-content-start align-items-center p-1 " style="background-color: #f6f6f6;">
-
-    <div class=" mx-2 my-1" style="width:100px;height: 100px; overflow: hidden ; border-radius: 50%; ">
-      <img :src="otherUser.image" :alt="otherUser.name + ' profile picture'" class="otherUserImage">
+      <div class=" mx-2 my-1" style="width:100px;height: 100px; overflow: hidden ; border-radius: 50%; ">
+        <img :src="otherUser.image" :alt="otherUser.name + ' profile picture'" class="otherUserImage">
+      </div>
+      <div class="fw-bold fs-3 mx-2 my-1 " style="color: #996542!important; "> {{ otherUser.name }} </div>
+<!--      <span>يكتب الان..</span>-->
     </div>
-    <div class="fw-bold fs-3 mx-2 my-1 " style="color: #996542!important; "> {{ otherUser.name }} </div>
-    </div>
 
-    <div v-if="messages.length" class="card-body bbg " style="max-height: 500px; overflow: auto;" >
+    <div v-if="messages.length" class="card-body bbg overflow-y-auto " style="max-height: 500px;">
       <div v-for="message in messages" v-bind:key="message.id">
+
         <div v-if="message.author !== authUser.email" class="d-flex justify-content-end">
-          <div class=" rounded-3  mb-1 py-2 px-2" style="background-color: #ffffff ;color: black; box-shadow: inset;"> {{ message.body }} </div>
+          <div class=" rounded-3  mb-1 py-2 px-3" style="background-color: #ffffff ;color: black; box-shadow: inset;">
+            <div> {{ message.body }} </div>
+            <span class="d-flex justify-space-between" style="font-size: 10px;">
+              <small>{{otherUser.name}}</small>
+              <small>{{ moment(message.state.timestamp).fromNow() }}</small>
+            </span>
+          </div>
         </div>
         <div v-else class="d-flex justify-content-start">
-          <div class="text-white rounded-3  mb-1 py-2 px-2" style="background-color: #996542"> {{ message.body }} </div>
+          <div class="text-white rounded-3 mb-1 py-2 px-3 overflow-hidden" style="background-color: #996542">
+            <div> {{ message.body }} </div>
+            <span class="d-flex justify-space-between" style="font-size: 10px;">
+              <small class="ml-2">{{otherUser.name}}</small>
+              <small>{{ moment(message.state.timestamp).fromNow() }}</small>
+            </span>
+          </div>
         </div>
+
       </div>
     </div>
 
@@ -41,6 +55,9 @@ const Chat = require('twilio-chat');
 // needed to name the channel correctly
 import {max, min} from "@popperjs/core/lib/utils/math";
 import axios from "axios";
+// to format the date of the message
+let moment = require('moment') ;
+moment.locale('ar') ;
 
 export default {
   name: "ChatComponent",
@@ -54,22 +71,6 @@ export default {
       required: true
     }
   },
-  // computed: {
-  //     computedProp(){
-  //       return this.otherUser.name ;
-  //     },
-  // },
-  // watch:{
-  //   otherUser: {
-  //     immediate:true,
-  //     handler (newValue , oldValue) {
-  //       console.log('new value of other user has been detected:',newValue);
-  //       console.log(this.otherUser);
-  //       console.log(oldValue);
-  //       console.log(newValue) ;
-  //     },
-  //   }
-  // },
   data() {
     return {
       messages: [],
@@ -77,6 +78,7 @@ export default {
       channel: "",
       initialMessage:"جاري التحميل",
       typingPlaceHolder: "",
+      moment: moment
     };
   },
   async created() {
@@ -129,7 +131,6 @@ export default {
       });
 
       this.channel.on("messageAdded", message => {
-        console.log('message added');
         this.messages.push(message);
       });
 
@@ -140,6 +141,7 @@ export default {
       this.messages = (await this.channel.getMessages()).items;
       if(this.messages.length===0)
         this.initialMessage = "لم تبدأ المحادثة حتي الان..." ;
+      // console.log(this.messages.deleteMessage()) ;
     },
 
     sendMessage() {
