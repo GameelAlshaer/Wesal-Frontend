@@ -13,9 +13,6 @@
       <div v-if="authUser!==undefined && otherUser!==undefined">
         <chat-body :auth-user="authUser" :other-user="otherUser"></chat-body>
       </div>
-      <div v-else>
-        Users are not defined
-      </div>
     </div>
   </div>
   </div>
@@ -55,6 +52,9 @@ export default {
     await this.get2Users(this.otherUserId);
   },
   methods:{
+    refreshPage(){
+      location.reload();
+    },
     // check if not logged in ? log in ==> in either cases get the token
     loginAndGetToken() {
       if (localStorage.getItem("usertoken") === null)
@@ -79,6 +79,16 @@ export default {
           });
     },
   },
+  watch: {
+    $route(to , from){
+      console.log(to.params) ;
+      console.log(from.params) ;
+
+      if (to.params.otherUserId !== from.params.otherUserId) {
+        this.refreshPage();
+      }
+    }
+  }
 
 }
 </script>

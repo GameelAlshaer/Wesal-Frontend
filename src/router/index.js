@@ -203,7 +203,7 @@ const routes = [
         path: '/chatRoom/:otherUserId',
         name: 'chatRoom',
         component: ChatRoom,
-        props: true
+        props: true,
     },
     {
         path: '/chatStartPage',

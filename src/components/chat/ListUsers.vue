@@ -4,13 +4,12 @@
     <div class="card-body" style="max-height: 650px; overflow: auto;">
       <p v-if="!users.length">لا يوجد أي دردشات </p>
       <ul v-else class="list-group list-group-flush">
-        <li v-for="user in users" :key="user.user[0].id" class="list-group-item list-group-item-action" @click="goToChat(user.user[0].id)">
-<!--          <router-link style="text-decoration: none; color:#996542; font-weight: bolder; font-size: 1.25rem;"-->
-<!--            :to="'/chatRoom/' + user.user[0].id"-->
-<!--          >-->
-<!--                <p>{{ user.user[0].name }}</p>-->
-<!--          </router-link>-->
-          <p style="cursor: pointer" >{{ user.user[0].name }}</p>
+        <li v-for="user in users" :key="user.user[0].id" class="list-group-item list-group-item-action" >
+          <router-link style="text-decoration: none; color:#996542; font-weight: bolder; font-size: 1.25rem;"
+            :to="'/chatRoom/' + user.user[0].id"
+          >
+                <p>{{ user.user[0].name }}</p>
+          </router-link>
         </li>
       </ul>
     </div>
@@ -18,11 +17,11 @@
 </template>
 
 <script>
-// import {RouterLink } from "vue-router";
+import {RouterLink } from "vue-router";
 import axios from "axios";
 export default {
   components:{
-    // RouterLink,
+    RouterLink,
   },
   data() {
     return {
@@ -49,14 +48,6 @@ export default {
       this.users = response.data ;
     },
 
-    goToChat(id){
-      this.$router.push({
-        path: `/chatRoom/${id}`,
-        replace:true
-      });
-      window.location.reload() ;
-      // we reload the page , so that it updates the props values , and call the api method with the new value
-    },
   },
   async created() {
     await this.fetchUsers();
