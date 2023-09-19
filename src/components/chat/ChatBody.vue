@@ -37,7 +37,18 @@
       <h3>{{ initialMessage }}</h3>
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer d-flex">
+<!--      <input type="file">-->
+      <div>
+        <input type="file" id="pic" style="display: none" @change="handleImageUpload">
+
+        <label for="pic" style="cursor: pointer" >
+          <i class="material-icons ml-1" style="font-size: 2.25rem; color: #996542;">image</i>
+        </label>
+      </div>
+      <button type="submit" @click="sendMessage" :disabled="emptyMessage" :style="{cursor: emptyMessage ? 'not-allowed' : 'pointer'}">
+        <i class="material-icons ml-1" style="font-size: 2.25rem; color: #996542;" >send</i>
+      </button>
       <input
           type="text"
           v-model="newMessage"
@@ -61,6 +72,11 @@ moment.locale('ar') ;
 
 export default {
   name: "ChatComponent",
+  computed: {
+    emptyMessage(){
+      return this.newMessage==="" ;
+    }
+  },
   props: {
     authUser: {
       type: Object,
@@ -108,9 +124,6 @@ export default {
       }
       const {data} = await axios.post("http://127.0.0.1:8000/api/token", params, option);
       return data.token;
-
-      // const data = await axios.post("http://127.0.0.1:8000/api/test",params, option);
-      // return data ;
     },
 
     async initializeClient(token) {
@@ -122,8 +135,6 @@ export default {
       this.channel = await client.getChannelByUniqueName(
           `${mn}-${mx}`
       );
-
-      console.log(this.channel);
 
       client.on("tokenAboutToExpire", async () => {
         const token = await this.fetchToken();
@@ -137,30 +148,32 @@ export default {
     },
 
     async fetchMessages() {
-      console.log('fetch messages');
       this.messages = (await this.channel.getMessages()).items;
       if(this.messages.length===0)
         this.initialMessage = "لم تبدأ المحادثة حتي الان..." ;
-      // console.log(this.messages.deleteMessage()) ;
+      // console.log(this.messages.delete()) ;
     },
 
     sendMessage() {
-      console.log('send message %s', this.newMessage);
-      this.channel.sendMessage(this.newMessage);
+      if(this.newMessage!=="")
+        this.channel.sendMessage(this.newMessage);
       this.newMessage = "";
+    },
+
+    handleImageUpload(){
+
     },
   }
 }
 </script>
 <style scoped>
 .bbg{
-  background-image: url(../../assets/chatBg.png) !important;    
+  background-image: url(../../assets/chatBg.png) !important;
   background-position: center center;
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed; 
     z-index: 100000;
-
 }
 .otherUserImage{
   width: 150%;
